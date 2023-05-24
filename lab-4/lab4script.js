@@ -1,13 +1,13 @@
 import { generateRandomColor, epsRound } from "./utils.js"
 
-const fileName = './data/test6.json'
+const fileName = './data/test5.json'
 
 let dots = [[]]
 let eps = 0.0001
 
 document.querySelector("#input_stroke_size").addEventListener("change", event => {
     setInterval(parseFloat(event.target.value))
-    drawAndCalculate()
+    drawAndPrint()
 })
 
 document.querySelector("#add_button").addEventListener("click", event => {
@@ -29,7 +29,7 @@ document.querySelector("#add_button").addEventListener("click", event => {
     if (!isInDots) {
         dots.push([x, y])
     }
-    drawAndCalculate()
+    drawAndPrint()
 })
 
 document.querySelector("#get_button").addEventListener("click", event => {
@@ -45,78 +45,78 @@ document.querySelector("#get_button").addEventListener("click", event => {
 
 $.getJSON(fileName, function (fileData) {
     dots = [...fileData]
-    drawAndCalculate()
+    drawAndPrint()
 })
 
-function drawAndCalculate() {
+function drawAndPrint() {
     console.clear()
     dots.sort((a, b) => a[0] - b[0])
     graphInitialize()
 
-    let linear = linearApproximation()
-    let square = squareApproximation()
-    let cube = cubeApproximation()
-    let pow = powApproximation()
-    let exponential = exponentialApproximation()
-    let logariphmical = logariphmicalApproximation()
+    let funcs = []
+    funcs.push(linearApproximation())
+    funcs.push(squareApproximation())
+    funcs.push(cubeApproximation())
+    if (!isNegativeDots()[0]) {
+        funcs.push(logaritmicApproximation())
+    } else {
+        console.error("Logaritmic approximation can not be calculated")
+    }
+    if (!isNegativeDots()[1]) {
+        funcs.push(exponentialApproximation())
+    } else {
+        console.error("Exponential approximation can not be calculated")
+    }
+    if (!isNegativeDots()[0] && !isNegativeDots()[1]) {
+        funcs.push(powApproximation())
+    } else {
+        console.error("Power approximation can not be calculated")
+    }
 
-    drawFunction(linear.func)
-    drawFunction(square.func)
-    drawFunction(cube.func)
-    drawFunction(pow.func)
-    drawFunction(exponential.func)
-    drawFunction(logariphmical.func)
+    workWithApproximations(funcs)
 
-    console.log("Linear function:", linear.description)
-    console.log("Square function:", square.description)
-    console.log("Cube function:", cube.description)
-    console.log("Pow function:", pow.description)
-    console.log("Exp function:", exponential.description)
-    console.log("Log function:", logariphmical.description)
-
-    console.log("Linear deviation", epsRound(linear.deviation, eps))
-    console.log("Square deviation", epsRound(square.deviation, eps))
-    console.log("Cube deviation", epsRound(cube.deviation, eps))
-    console.log("Pow deviation", epsRound(pow.deviation, eps))
-    console.log("Exp deviation", epsRound(exponential.deviation, eps))
-    console.log("Log deviation", epsRound(logariphmical.deviation, eps))
     drawAllDots()
 }
 
-function printLargeArray(differences) {
-    let tempColumn = []
-    differences.forEach(row => {
-        let tempRow = []
-        row.forEach(element => {
-            let temp = epsRound(element, 0.0001)
-            if (!temp) {
-                temp = 0
-            }
-            tempRow.push(temp)
-        })
-        tempColumn.push(tempRow)
-        if (tempColumn.length == 5) {
-            console.table(tempColumn[0].map((_, colIndex) => tempColumn.map(row => row[colIndex])))
-            tempColumn = []
-        }
-        tempRow = []
+function workWithApproximations(funcs) {
+    const tableOfFuncs = []
+
+    funcs.forEach(currFunc => {
+        drawFunction(currFunc.func)
+        tableOfFuncs.push({'type': currFunc.type, 'description': currFunc.description, 'deviaton': epsRound(currFunc.deviation, eps)})
     })
-    if (tempColumn.length != 0) {
-        console.table(tempColumn[0].map((_, colIndex) => tempColumn.map(row => row[colIndex])))
+    
+    const transformedTable = tableOfFuncs.reduce((acc, {type, ...x}) => { acc[type] = x; return acc}, {})
+    console.table(transformedTable)
+}
+
+function isNegativeDots() {
+    let isNegativeX = false
+    let isNegativeY = false
+    if (dots[0][0] < 0) {
+        isNegativeX = true
     }
+    dots.forEach(dot => {
+        if (dot[1] < 0) {
+            isNegativeY = true
+        }
+    })
+    return [isNegativeX, isNegativeY]
 }
 
 
 class FunctionResult {
-    constructor(func, description, deviation) {
+    constructor(func, description, deviation, type) {
         this.#func = func
         this.#description = description
         this.#deviation = deviation
+        this.#type = type
     }
 
     #func
     #description
     #deviation
+    #type
 
     get func() {
         return this.#func
@@ -128,6 +128,10 @@ class FunctionResult {
 
     get deviation() {
         return this.#deviation
+    }
+
+    get type() {
+        return this.#type
     }
 }
 
@@ -141,8 +145,9 @@ function linearApproximation() {
     let func = (x) => a * x + b
     let description = epsRound(a, eps) + " * x + " + epsRound(b, eps)
     let deviation = getMidSquareDeviation(func)
+    let type = "Linear"
 
-    return new FunctionResult(func, description, deviation)
+    return new FunctionResult(func, description, deviation, type)
 }
 
 function powApproximation() {
@@ -154,8 +159,9 @@ function powApproximation() {
     let func = (x) => a * Math.pow(x, b)
     let description = epsRound(a, eps) + " * x^" + epsRound(b, eps)
     let deviation = getMidSquareDeviation(func)
+    let type = "Power"
 
-    return new FunctionResult(func, description, deviation)
+    return new FunctionResult(func, description, deviation, type)
 }
 
 function exponentialApproximation() {
@@ -167,11 +173,12 @@ function exponentialApproximation() {
     let func = (x) => a * Math.exp(b * x)
     let description = epsRound(a, eps) + " * e^("+ epsRound(b, eps) + "*x)"
     let deviation = getMidSquareDeviation(func)
+    let type = "Exponential"
 
-    return new FunctionResult(func, description, deviation)
+    return new FunctionResult(func, description, deviation, type)
 }
 
-function logariphmicalApproximation() {
+function logaritmicApproximation() {
     let calcData = calcLinearApproximation(true, false)
     if (!calcData) return false
     let a = calcData[0]
@@ -180,8 +187,9 @@ function logariphmicalApproximation() {
     let func = (x) => a * Math.log(x) + b
     let description = epsRound(a, eps) + " * log(x) + "+ epsRound(b, eps)
     let deviation = getMidSquareDeviation(func)
+    let type = "Logarithmic"
 
-    return new FunctionResult(func, description, deviation)
+    return new FunctionResult(func, description, deviation, type)
 }
 
 
@@ -193,8 +201,9 @@ function squareApproximation() {
     let func = (x) => a_2 * Math.pow(x, 2) + a_1 * x + a_0
     let description = epsRound(a_2, eps) + " * x^2 + " + epsRound(a_1, eps) + " * x + " + epsRound(a_0, eps)
     let deviation = getMidSquareDeviation(func)
+    let type = "Square"
 
-    return new FunctionResult(func, description, deviation)
+    return new FunctionResult(func, description, deviation, type)
 }
 
 function cubeApproximation() {
@@ -205,8 +214,9 @@ function cubeApproximation() {
     let func = (x) => a_3 * Math.pow(x, 3) + a_2 * Math.pow(x, 2) + a_1 * x + a_0
     let description = epsRound(a_3, eps) + " * x^3 + " + epsRound(a_2, eps) + " * x^2 + " + epsRound(a_1, eps) + " * x + " + epsRound(a_0, eps)
     let deviation = getMidSquareDeviation(func)
+    let type = "Cubic"
 
-    return new FunctionResult(func, description, deviation)
+    return new FunctionResult(func, description, deviation, type)
 }
 
 
@@ -301,7 +311,6 @@ function getMidSquareDeviation(func) {
     dots.forEach(dot => {
         summ += Math.pow(func(dot[0]) - dot[1], 2)
     })
-    //S = summ
     return Math.sqrt(summ / dots.length)
 }
 
@@ -316,9 +325,16 @@ function getValByX(x) {
     output.linear = new setObj(epsRound(linearApproximation().func(x), 0.0001))
     output.square = new setObj(epsRound(squareApproximation().func(x), 0.0001))
     output.cube = new setObj(epsRound(cubeApproximation().func(x), 0.0001))
-    output.pow = new setObj(epsRound(powApproximation().func(x), 0.0001))
-    output.exponential = new setObj(epsRound(exponentialApproximation().func(x), 0.0001))
-    output.logariphmical = new setObj(epsRound(logariphmicalApproximation().func(x), 0.0001))
+   
+    if (!isNegativeDots()[0] && !isNaN(logaritmicApproximation().func(x))) {
+        output.logariphmical = new setObj(epsRound(logaritmicApproximation().func(x), 0.0001))
+    }
+    if (!isNegativeDots()[1] && !isNaN(exponentialApproximation().func(x))) {
+        output.exponential = new setObj(epsRound(exponentialApproximation().func(x), 0.0001))
+    }
+    if (!isNegativeDots()[0] && !isNegativeDots()[1] && !isNaN(powApproximation().func(x))) {
+        output.pow = new setObj(epsRound(powApproximation().func(x), 0.0001))
+    }
     
     console.table(output)
 }
