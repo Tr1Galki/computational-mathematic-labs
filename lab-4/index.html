@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Lab 4</title>
+        <link rel="stylesheet" href="styles.css"></link>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <script type="module" src="lab4script.js"></script>
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </head>
+    <body>
+        <div class='main_container'>
+            <div class="input_container">
+                <form class="input_form">
+                    <fieldset>
+                        <legend>Functionality</legend>
+                        <div class="inform_container">
+                            
+                            
+                            <div>
+                                <label for="input_x">Coords:</label>
+                                <input class="input_dot" id="input_x" maxlength="7">
+                                <input class="input_dot" id="input_y" maxlength="7">
+                            </div>
+
+                            <button class="submit_button" id="add_button">Add dot</button>
+
+                            <div>
+                                <label for="input_param">x:</label>
+                                <input class="input_range" id="input_param" maxlength="7">
+                            </div>
+
+                            <button class="submit_button" id="get_button">Get value</button>
+                        <div/>
+                    </fieldset>
+                </form>
+            </div>
+            
+            <div class='canvas_container'>
+                <canvas id="graph"></canvas>
+                <div>
+                    <input class="input_range" id="input_stroke_size">
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
