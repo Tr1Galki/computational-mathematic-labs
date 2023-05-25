@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Lab3</title>
+        <link rel="stylesheet" href="styles.css"></link>
+        <script type="module" src="lab3script.js"></script>
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </head>
+    <body>
+        <div class='main_container'>
+            <div class="input_container">
+                <form class="input_form">
+                    <fieldset>
+                        <legend>Please select your numbers</legend>
+                        <div class="inform_container">
+                            <div class="functions">
+                                <div>
+                                    <input type="radio" id="eq1" name="equation" value="eq1" class="radio_equation" >
+                                    <label label for="eq1">
+                                        \(y = {2x^3 + 3.41x^2 - 23.74x + 2.95}\)
+                                    </label>
+                                </div>
+
+                                <div>
+                                    <input type="radio" id="eq2" name="equation" value="eq2" class="radio_equation">
+                                    <label label for="eq2">
+                                        \(y = \frac{\ln({x-1})}{3}\)
+                                    </label>
+                                </div>
+
+                                <div>
+                                    <input type="radio" id="eq3" name="equation" value="eq3" class="radio_equation">
+                                    <label label for="eq3">
+                                        \(y = {{3sin(x)}^3}^{3} + \frac{1}{2}\)
+                                    </label>
+                                </div>  
+
+                                <div>
+                                    <input type="radio" id="eq4" name="equation" value="eq4" class="radio_equation">
+                                    <label label for="eq4">
+                                        \(y = \log_{2}{\frac{|x^2-x|}{3}}\)
+                                    </label>
+                                </div>    
+
+                                <div>
+                                    <input type="radio" id="eq5" name="equation" value="eq5" class="radio_equation">
+                                    <label label for="eq5">
+                                        \(y = 2^{\sqrt{x}}-x\)
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                range
+                                <input class="input_range" id="input_left">
+                                <input class="input_range" id="input_right">
+                            </div>
+                            <div>
+                                <label for="input_eps">Accuracy:</label>
+                                <input class="input_range" id="input_eps" maxlength="8">
+                            </div>
+                        <div/>
+                    </fieldset>
+                </form>
+            </div>
+            
+            <div class='canvas_container'>
+                <canvas id="graph"></canvas>
+                <div>
+                    <input class="input_range" id="input_stroke_size">
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
