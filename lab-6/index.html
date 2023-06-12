@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Lab6</title>
+        <link rel="stylesheet" href="styles.css"></link>
+        <script type="module" src="lab6script.js"></script>
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </head>
+    <body>
+        <div class='main_container'>
+            <div class="input_container">
+                <form class="input_form">
+                    <fieldset>
+                        <legend>Please select your numbers</legend>
+                        <div class="inform_container">
+                            <div class="functions">
+                                <div>
+                                    <input type="radio" id="eq1" name="equation" value="eq1" class="radio_equation" checked>
+                                    <label label for="eq1">
+                                        \(y' = y + sin(x)\)
+                                    </label>
+                                </div>
+
+                                <div>
+                                    <input type="radio" id="eq2" name="equation" value="eq2" class="radio_equation">
+                                    <label label for="eq2">
+                                        \(y' = x^2 - 2y\)
+                                    </label>
+                                </div>
+
+                                <div>
+                                    <input type="radio" id="eq3" name="equation" value="eq3" class="radio_equation">
+                                    <label label for="eq3">
+                                        \(y' = \frac{xy}{2}\)
+                                    </label>
+                                </div>  
+                            </div>
+
+                            <div>
+                                \(f(x_0)\)
+                                <input class="input_value" id="input_y_0" value="1">
+                            </div>
+                            
+                            <div>
+                                left
+                                <input class="input_value" id="input_left" value="0">
+                            </div>
+                            <div>
+                                right
+                                <input class="input_value" id="input_right" value="1">
+                            </div>
+
+                            <div>
+                                intervals
+                                <input class="input_value" id="input_intervals" value="4">
+                            </div>
+                            
+                            <div>
+                                <label for="input_eps">Accuracy:</label>
+                                <input class="input_value" id="input_eps" maxlength="8" value="0.0001">
+                            </div>
+                        <div/>
+                    </fieldset>
+                </form>
+            </div>
+            
+            <div class='canvas_container'>
+                <canvas id="graph"></canvas>
+                <div>
+                    <input class="input_value" id="input_stroke_size_x" value="0.5">
+                    <input class="input_value" id="input_stroke_size_y" value="0.5">
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

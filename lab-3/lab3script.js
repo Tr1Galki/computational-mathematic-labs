@@ -82,8 +82,26 @@ function init(func) {
     console.warn("Simpson method:")
     let simpsonResult = integralCalculate(simpsonIntegral, func, [inputLeftBorder, inputRightBorder], 3)
     consoleTable([simpsonResult])
+
+    calculate()
 }
 
+function calculate() {
+    let c_0 = temp(2) * 19 * 2 / 288
+    console.log(c_0)
+    let c_1 = temp(2.4) * 75 * 2 / 288
+    console.log(c_1)
+    let c_2 = temp(2.8) * 50 * 2 / 288
+    console.log(c_2)
+    let c_3 = temp(3.2) * 50 * 2 / 288
+    console.log(c_3)
+    let c_4 = temp(3.6) * 75 * 2 / 288
+    console.log(c_4)
+    let c_5 = temp(4) * 19 * 2 / 288
+    console.log(c_5)
+    let result = c_0 + c_1 + c_2 + c_3 + c_4 + c_5
+    console.log(result)
+}
 
 function consoleTable(arr) {
     let table = []
@@ -125,6 +143,14 @@ function func5(x) {
     let result = Math.pow(2, Math.sqrt(x)) - x
     return result
 }
+
+
+function temp(x) {
+    let result = -2 * Math.pow(x, 3) + -3 * Math.pow(x, 2) + x + 5
+    return result
+}
+
+
 
 function isOutOfRange(func, left, right) {
     let currentRoot
